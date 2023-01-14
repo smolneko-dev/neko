@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/smolneko-team/smolneko/config"
@@ -23,7 +24,7 @@ func NewFiguresRepo(pg *postgres.Postgres, s config.Storage) *FiguresRepo {
 	return &FiguresRepo{pg, s}
 }
 
-// GetFigureById
+// GetFigureById -
 func (r *FiguresRepo) GetFigureById(ctx context.Context, id string) (model.Figure, error) {
 	figure := model.Figure{}
 
@@ -83,8 +84,11 @@ func (r *FiguresRepo) GetFigures(ctx context.Context, count int, cursor string) 
 
 	query := r.Builder.Select("figures_cols.*, COALESCE(NULLIF(image_path, null), '') as image_path, COALESCE(NULLIF(blurhash, null), '') as blurhash")
 
+	var created time.Time
+	var id, suffix string
+	var err error
 	if cursor != "" {
-		created, id, suffix, err := decodeCursor(cursor)
+		created, id, suffix, err = decodeCursor(cursor)
 		if err != nil {
 			return nil, "", "", fmt.Errorf("FiguresRepo - GetFigures - decodeCursor : %w", err)
 		}
@@ -118,7 +122,7 @@ func (r *FiguresRepo) GetFigures(ctx context.Context, count int, cursor string) 
 	} else {
 		columns = columns.OrderBy("created_at DESC, id DESC")
 	}
-	columns = columns.Limit(uint64(count))
+	columns = columns.Limit(uint64(count + 1))
 
 	query = query.FromSelect(columns, "figures_cols").
 		LeftJoin("figures_images ON figures_cols.id = figure_id AND preview = 'true'").
@@ -176,14 +180,25 @@ func (r *FiguresRepo) GetFigures(ctx context.Context, count int, cursor string) 
 		}
 	}
 
-	var previousCursor string
-	var nextCursor string
-	if len(figures) > 0 {
-		nextCursor = encodeCursor(figures[len(figures)-1].CreatedAt, figures[len(figures)-1].ID, "next")
-
-		if cursor != "" {
-			previousCursor = encodeCursor(figures[0].CreatedAt, figures[0].ID, "prev")
+	hasNextPage := false
+	if len(figures) >= count+1 {
+		hasNextPage = true
+	}
+	if hasNextPage == true {
+		if suffix == "next" || suffix == "" {
+			figures = figures[:len(figures)-1]
+		} else {
+			figures = figures[1:]
 		}
+
+	}
+
+	var nextCursor, previousCursor string
+	if (len(figures) > 0 && hasNextPage == true) || (len(figures) > 0 && suffix == "prev") {
+		nextCursor = encodeCursor(figures[len(figures)-1].CreatedAt, figures[len(figures)-1].ID, "next")
+	}
+	if ((suffix == "prev" || cursor != "") && len(figures) > 0 && hasNextPage == true) || (suffix == "next" && len(figures) > 0 && len(figures) < count) {
+		previousCursor = encodeCursor(figures[0].CreatedAt, figures[0].ID, "prev")
 	}
 
 	return figures, nextCursor, previousCursor, nil
