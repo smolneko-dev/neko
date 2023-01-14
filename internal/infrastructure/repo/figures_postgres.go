@@ -121,7 +121,8 @@ func (r *FiguresRepo) GetFigures(ctx context.Context, count int, cursor string) 
 	columns = columns.Limit(uint64(count))
 
 	query = query.FromSelect(columns, "figures_cols").
-		LeftJoin("figures_images ON figures_cols.id = figure_id AND preview = 'true'")
+		LeftJoin("figures_images ON figures_cols.id = figure_id AND preview = 'true'").
+		OrderBy("created_at DESC, id DESC")
 
 	sql, args, err := query.ToSql()
 	if err != nil {
