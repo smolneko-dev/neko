@@ -5,19 +5,19 @@ app:
 
 http:
   port: '3120'
-  web_url: 'https://example.com'
+  web_urls: 'https://example.com'
 
 logger:
   log_level: 'debug'
 
 postgres:
-  user: 'smol'
-  password: 'neko'
+  pg_pool_max: 1
   host: 'postgres'
   port: 5432
+  user: 'smol'
+  password: 'neko'
   name: 'smolneko'
   ssl_mode: 'disable'
-  pg_pool_max: 1
 
 storage:
   img_key: '822d1b6d2bbec9414fa959954107c96d310249bb38cb9669585b1b721aa40a708d264a64d1863dbba048ce954d12ec967ce1d927cdd03a0e417068d6c2de5860'

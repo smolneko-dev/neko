@@ -63,7 +63,6 @@ Makefile
 LICENSE
 **/*.md
 **/*_test.go
-config/example.config.yml
 docker-compose.yml
 
 # Folders
