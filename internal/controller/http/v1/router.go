@@ -34,9 +34,8 @@ func NewRouter(app *fiber.App, webUrls string, l logger.Interface, f usecase.Fig
 
 	app.Use(
 		recover.New(recover.Config{
-			Next:              nil,
-			EnableStackTrace:  true,
-			StackTraceHandler: nil,
+			Next:             nil,
+			EnableStackTrace: true,
 		}),
 		cors.New(corsCfg),
 		fLogger.New(fLogger.ConfigDefault),
