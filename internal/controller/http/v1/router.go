@@ -2,7 +2,6 @@ package v1
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -14,12 +13,15 @@ import (
 	fLogger "github.com/gofiber/fiber/v2/middleware/logger"
 )
 
-func NewRouter(app *fiber.App, webUrls string, l logger.Interface, f usecase.Figure, c usecase.Character, img usecase.Images) {
-	log.Println(webUrls)
+type RouterConfig struct {
+	Logger   logger.Interface
+	CorsUrls string
+}
 
+func NewRouter(app *fiber.App, cfg RouterConfig, f usecase.Figure, c usecase.Character, img usecase.Images) {
 	corsCfg := cors.Config{
 		Next:         nil,
-		AllowOrigins: webUrls,
+		AllowOrigins: cfg.CorsUrls,
 		AllowMethods: strings.Join([]string{
 			fiber.MethodGet,
 			fiber.MethodHead,
@@ -47,8 +49,8 @@ func NewRouter(app *fiber.App, webUrls string, l logger.Interface, f usecase.Fig
 
 	h := app.Group("/v1")
 	{
-		newFiguresRoutes(h, f, img, l)
-		newCharactersRoutes(h, c, img, l)
+		newFiguresRoutes(h, f, img, cfg.Logger)
+		newCharactersRoutes(h, c, img, cfg.Logger)
 	}
 
 	// Not Found (404) error handler
