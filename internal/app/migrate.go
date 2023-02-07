@@ -38,6 +38,8 @@ func init() {
 		SSLMode:  getEnv("DB_SSL_MODE"),
 	}
 
+	log.Printf("Migrate: started on host %s port %s database %s\n", cfg.Host, cfg.Port, cfg.Name)
+
 	url := fmt.Sprintf(
 		"postgres://%s:%s@%s:%s/%s?sslmode=%s",
 		cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.Name, cfg.SSLMode,
@@ -64,7 +66,7 @@ func init() {
 	err = m.Up()
 	defer m.Close()
 	if err != nil && !errors.Is(err, migrate.ErrNoChange) {
-		log.Fatalf("Migrate: up error: %s", err)
+		log.Fatalf("Migrate: up error: %w", err)
 	}
 
 	if errors.Is(err, migrate.ErrNoChange) {
