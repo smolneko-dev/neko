@@ -1,9 +1,9 @@
-FROM golang:1.19-alpine as modules
+FROM golang:1.20-alpine as modules
 COPY go.mod go.sum /modules/
 WORKDIR /modules
 RUN go mod download
 
-FROM golang:1.19-alpine as builder
+FROM golang:1.20-alpine as builder
 COPY --from=modules /go/pkg /go/pkg
 COPY . /smolneko
 WORKDIR /smolneko
