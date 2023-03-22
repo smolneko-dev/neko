@@ -14,7 +14,7 @@ import (
 )
 
 type RouterConfig struct {
-	Logger   logger.Interface
+	Logger   *logger.Logger
 	CorsUrls string
 }
 

@@ -3,25 +3,16 @@ package logger
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/rs/zerolog"
 )
 
-type Interface interface {
-	Debug(message any, args ...any)
-	Info(message string, args ...any)
-	Warn(message string, args ...any)
-	Error(message any, args ...any)
-	Fatal(message any, args ...any)
-}
-
 type Logger struct {
-	logger *zerolog.Logger
+	*zerolog.Logger
 }
-
-var _ Interface = (*Logger)(nil)
 
 func New(level string, stage string) *Logger {
 	var globalLevel zerolog.Level
@@ -35,6 +26,8 @@ func New(level string, stage string) *Logger {
 		globalLevel = zerolog.WarnLevel
 	case "error":
 		globalLevel = zerolog.ErrorLevel
+	case "fatal":
+		globalLevel = zerolog.FatalLevel
 	default:
 		globalLevel = zerolog.InfoLevel
 	}
@@ -42,15 +35,12 @@ func New(level string, stage string) *Logger {
 	zerolog.SetGlobalLevel(globalLevel)
 
 	var logger zerolog.Logger
-
-	// is the number of stack frames to skip to find the caller
-	skipFrameCount := 3
-
 	if stage == "dev" {
 		output := zerolog.ConsoleWriter{
 			Out:        os.Stdout,
 			TimeFormat: time.RFC3339,
 		}
+
 		output.FormatLevel = func(i any) string {
 			return strings.ToUpper(fmt.Sprintf("| %-6s|", i))
 		}
@@ -61,74 +51,30 @@ func New(level string, stage string) *Logger {
 			Caller().
 			Logger()
 	} else {
+		zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+		zerolog.CallerMarshalFunc = lshortfile
+
 		logger = zerolog.New(os.Stdout).
 			With().
 			Timestamp().
-			CallerWithSkipFrameCount(zerolog.CallerSkipFrameCount + skipFrameCount). // 5
+			Caller().
 			Logger()
 	}
 
-	return &Logger{
-		logger: &logger,
-	}
+	return &Logger{&logger}
 }
 
-func (l *Logger) Debug(message any, args ...any) {
-	l.log("debug", message, args...)
-}
-
-func (l *Logger) Info(message string, args ...any) {
-	l.log("info", message, args...)
-}
-
-func (l *Logger) Warn(message string, args ...any) {
-	l.log("warn", message, args...)
-}
-
-func (l *Logger) Error(message any, args ...any) {
-	l.log("error", message, args...)
-}
-
-func (l *Logger) Fatal(message any, args ...any) {
-	l.log("fatal", message, args...)
-}
-
-func (l *Logger) log(level, message any, args ...any) {
-
-	msg := l.msgFmt(message)
-
-	switch level {
-	case "debug":
-		l.logger.Debug().Msgf(msg, args...)
-	case "info":
-		if len(args) == 0 {
-			l.logger.Info().Msg(msg)
-		} else {
-			l.logger.Info().Msgf(msg, args...)
+// lshortfile - final file name element and line number: d.go:23
+//
+// From https://github.com/rs/zerolog#add-file-and-line-number-to-log
+func lshortfile(pc uintptr, file string, line int) string {
+	short := file
+	for i := len(file) - 1; i > 0; i-- {
+		if file[i] == '/' {
+			short = file[i+1:]
+			break
 		}
-	case "warn":
-		if len(args) == 0 {
-			l.logger.Warn().Msg(msg)
-		} else {
-			l.logger.Warn().Msgf(msg, args...)
-		}
-	case "error":
-		l.logger.Error().Msgf(msg, args...)
-	case "fatal":
-		l.logger.Fatal().Msgf(msg, args...)
-	default:
-		l.logger.Info().Msg(msg)
 	}
-
-}
-
-func (l *Logger) msgFmt(message any) string {
-	switch msg := message.(type) {
-	case error:
-		return msg.Error()
-	case string:
-		return msg
-	default:
-		return fmt.Sprintf("%s message has unknown type", message)
-	}
+	file = short
+	return file + ":" + strconv.Itoa(line)
 }

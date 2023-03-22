@@ -16,8 +16,7 @@ import (
 )
 
 func Run(cfg *config.Config) {
-
-	l := logger.New(cfg.Log.Level, cfg.App.StageStatus)
+	log := logger.New(cfg.Log.Level, cfg.App.StageStatus)
 
 	url := fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
@@ -35,7 +34,7 @@ func Run(cfg *config.Config) {
 		postgres.ConnTimeout(5*time.Second),
 	)
 	if err != nil {
-		l.Fatal(fmt.Errorf("app - Run - postgres.New: %w", err))
+		log.Fatal().Err(fmt.Errorf("app - Run - postgres.New: %w", err))
 	}
 	defer pg.Close()
 
@@ -44,10 +43,9 @@ func Run(cfg *config.Config) {
 	imagesUseCase := usecase.NewImages(repo.NewImagesRepo(pg, cfg.Storage))
 
 	routerCfg := v1.RouterConfig{
-		Logger:   l,
+		Logger:   log,
 		CorsUrls: cfg.WebUrls,
 	}
-
 	handler := fiber.New(httpserver.FiberConfig(cfg.StageStatus, cfg.App.Name))
 	v1.NewRouter(handler, routerCfg, figuresUseCase, charactersUseCase, imagesUseCase)
 	httpserver.New(handler, httpserver.Port(cfg.HTTP.Port))
