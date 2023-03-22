@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"fmt"
+	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -57,6 +58,10 @@ func (r *CharactersRepo) GetCharacterById(ctx context.Context, id string) (model
 }
 
 func (r *CharactersRepo) GetCharacters(ctx context.Context, count int, cursor string) ([]model.Character, string, string, error) {
+	if count > 50 {
+		count = 50
+	}
+
 	lang := "en"
 	columns := r.Builder.
 		Select("id, birth_at, created_at, updated_at, is_draft").
@@ -66,8 +71,11 @@ func (r *CharactersRepo) GetCharacters(ctx context.Context, count int, cursor st
 
 	query := r.Builder.Select("characters_cols.*")
 
+	var created time.Time
+	var id, suffix string
+	var err error
 	if cursor != "" {
-		created, id, suffix, err := decodeCursor(cursor)
+		created, id, suffix, err = decodeCursor(cursor)
 		if err != nil {
 			return nil, "", "", fmt.Errorf("CharactersRepo - GetCharacters - decodeCursor : %w", err)
 		}
@@ -101,12 +109,10 @@ func (r *CharactersRepo) GetCharacters(ctx context.Context, count int, cursor st
 	} else {
 		columns = columns.OrderBy("created_at DESC, id DESC")
 	}
-	if count > 50 {
-		count = 50
-	}
-	columns = columns.Limit(uint64(count))
+	columns = columns.Limit(uint64(count) + 1)
 
-	query = query.FromSelect(columns, "characters_cols")
+	query = query.FromSelect(columns, "characters_cols").
+		OrderBy("created_at DESC, id DESC")
 
 	sql, args, err := query.ToSql()
 	if err != nil {
@@ -146,14 +152,26 @@ func (r *CharactersRepo) GetCharacters(ctx context.Context, count int, cursor st
 		characters = append(characters, character)
 	}
 
-	var previousCursor string
-	var nextCursor string
-	if len(characters) > 0 {
-		nextCursor = encodeCursor(characters[len(characters)-1].CreatedAt, characters[len(characters)-1].ID, "next")
+	hasNextPage := false
+	if len(characters) >= count+1 {
+		hasNextPage = true
+	}
 
-		if cursor != "" {
-			previousCursor = encodeCursor(characters[0].CreatedAt, characters[0].ID, "prev")
+	if hasNextPage == true {
+		if suffix == "next" || suffix == "" {
+			characters = characters[:len(characters)-1]
+		} else {
+			characters = characters[1:]
 		}
+	}
+
+	var previousCursor, nextCursor string
+	if (len(characters) > 0 && hasNextPage == true) || (len(characters) > 0 && suffix == "prev") {
+		nextCursor = encodeCursor(characters[len(characters)-1].CreatedAt, characters[len(characters)-1].ID, "next")
+	}
+	if ((suffix == "prev" || cursor != "") && len(characters) > 0 && hasNextPage == true) ||
+		(suffix == "next" && len(characters) > 0 && len(characters) < count) {
+		previousCursor = encodeCursor(characters[0].CreatedAt, characters[0].ID, "prev")
 	}
 
 	return characters, nextCursor, previousCursor, nil
