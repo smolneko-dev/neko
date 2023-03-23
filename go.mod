@@ -1,4 +1,4 @@
-module github.com/smolneko-team/smolneko
+module github.com/smolneko-team/neko
 
 go 1.20
 

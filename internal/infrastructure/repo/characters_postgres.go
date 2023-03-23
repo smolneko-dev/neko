@@ -7,8 +7,8 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5/pgtype"
-	"github.com/smolneko-team/smolneko/internal/model"
-	"github.com/smolneko-team/smolneko/pkg/postgres"
+	"github.com/smolneko-team/neko/internal/model"
+	"github.com/smolneko-team/neko/pkg/postgres"
 )
 
 type CharactersRepo struct {

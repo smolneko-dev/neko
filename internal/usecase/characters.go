@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/smolneko-team/smolneko/internal/model"
+	"github.com/smolneko-team/neko/internal/model"
 )
 
 type CharactersUseCase struct {

@@ -10,9 +10,9 @@ import (
 	"time"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/smolneko-team/smolneko/config"
-	"github.com/smolneko-team/smolneko/internal/model"
-	"github.com/smolneko-team/smolneko/pkg/postgres"
+	"github.com/smolneko-team/neko/config"
+	"github.com/smolneko-team/neko/internal/model"
+	"github.com/smolneko-team/neko/pkg/postgres"
 )
 
 type FiguresRepo struct {

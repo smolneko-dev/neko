@@ -1,17 +1,10 @@
-# smolneko 🌸
+# neko 🌸
 
-[![License](https://img.shields.io/github/license/smolneko-team/smolneko?color=%235f2eea)](https://github.com/smolneko-team/smolneko/blob/main/LICENSE) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/smolneko-team/smolneko?color=%235f2eea)
+[![License](https://img.shields.io/github/license/smolneko-team/neko?color=%235f2eea)](https://github.com/smolneko-team/neko/blob/main/LICENSE) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/smolneko-team/neko?color=%235f2eea)
 
-**smolneko** is an open-source project about anime and figures. 🌸
+**[smolneko](https://smolneko.moe)** is an open-source project about anime and figures. 🌸 This is the **API** of the project.
 
-This is the **API** of the project. The [web app](https://github.com/smolneko-team/smol) is currently under development, stay tuned for updates.
-
-## Development status
-
-🚧 **Currently work in progress** 🚧
-
-- API — now in active development.
-- Frontend part and website — coming soon 👀
+neko is in active development, sometimes there may be bugs and errors. The web app can be found [here](https://github.com/smolneko-team/smol).
 
 ## Roadmap
 - Caching
@@ -27,6 +20,6 @@ Contributions are welcome! 😊 You can add a star to the project or support act
 
 ## License
 
-© smolneko 2022  
+© smolneko 2022
 
-Licensed under the [MIT License](https://github.com/smolneko-team/smolneko/blob/main/LICENSE).
+Licensed under the [MIT License](https://github.com/smolneko-team/neko/blob/main/LICENSE).

@@ -3,7 +3,7 @@ package usecase
 import (
 	"context"
 
-	"github.com/smolneko-team/smolneko/internal/model"
+	"github.com/smolneko-team/neko/internal/model"
 )
 
 type (

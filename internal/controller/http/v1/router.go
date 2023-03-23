@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/smolneko-team/smolneko/internal/usecase"
-	"github.com/smolneko-team/smolneko/pkg/logger"
+	"github.com/smolneko-team/neko/internal/usecase"
+	"github.com/smolneko-team/neko/pkg/logger"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	fLogger "github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
 type RouterConfig struct {
