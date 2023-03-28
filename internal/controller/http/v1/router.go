@@ -11,6 +11,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	fLogger "github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/gofiber/fiber/v2/middleware/requestid"
+	"github.com/jaevor/go-nanoid"
 )
 
 type RouterConfig struct {
@@ -40,6 +42,19 @@ func NewRouter(app *fiber.App, cfg RouterConfig, f usecase.Figure, c usecase.Cha
 			EnableStackTrace: true,
 		}),
 		cors.New(corsCfg),
+		requestid.New(
+			requestid.Config{
+				Next:   nil,
+				Header: fiber.HeaderXRequestID,
+				Generator: func() string {
+					id, err := nanoid.Standard(21)
+					if err != nil {
+						return ""
+					}
+					return id()
+				},
+				ContextKey: "req_id",
+			}),
 		fLogger.New(fLogger.ConfigDefault),
 	)
 
