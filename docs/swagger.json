@@ -1,0 +1,139 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "https://smolneko.moe",
+        "title": "smolneko API",
+        "contact": {
+            "name": "Create an issue on GitHub.",
+            "url": "https://github.com/smolneko-team/neko/issues/new"
+        },
+        "license": {
+            "name": "MIT License",
+            "url": "https://github.com/smolneko-team/neko/blob/main/LICENSE"
+        },
+        "version": "0.1.0"
+    },
+    "basePath": "/v1",
+    "paths": {
+        "/figures": {
+            "get": {
+                "summary": "Get list of all figures.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.figuresResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.Figure": {
+            "type": "object",
+            "properties": {
+                "character_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "height": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_draft": {
+                    "type": "boolean"
+                },
+                "is_nsfw": {
+                    "type": "boolean"
+                },
+                "links": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "manufacturer": {
+                    "type": "string"
+                },
+                "materials": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "preview": {
+                    "$ref": "#/definitions/model.Image"
+                },
+                "price": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "release_date": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Image": {
+            "type": "object",
+            "properties": {
+                "blurhash": {
+                    "type": "string"
+                },
+                "is_preview": {
+                    "type": "boolean"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.figuresResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Figure"
+                    }
+                },
+                "next_cursor": {
+                    "type": "string"
+                },
+                "previous_cursor": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

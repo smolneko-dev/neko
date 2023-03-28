@@ -1,0 +1,91 @@
+basePath: /v1
+definitions:
+  model.Figure:
+    properties:
+      character_id:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      height:
+        type: integer
+      id:
+        type: string
+      is_draft:
+        type: boolean
+      is_nsfw:
+        type: boolean
+      links:
+        items:
+          additionalProperties:
+            type: string
+          type: object
+        type: array
+      manufacturer:
+        type: string
+      materials:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      preview:
+        $ref: '#/definitions/model.Image'
+      price:
+        items:
+          type: string
+        type: array
+      release_date:
+        type: string
+      size:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+      version:
+        type: string
+    type: object
+  model.Image:
+    properties:
+      blurhash:
+        type: string
+      is_preview:
+        type: boolean
+      url:
+        type: string
+    type: object
+  v1.figuresResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/model.Figure'
+        type: array
+      next_cursor:
+        type: string
+      previous_cursor:
+        type: string
+    type: object
+info:
+  contact:
+    name: Create an issue on GitHub.
+    url: https://github.com/smolneko-team/neko/issues/new
+  description: https://smolneko.moe
+  license:
+    name: MIT License
+    url: https://github.com/smolneko-team/neko/blob/main/LICENSE
+  title: smolneko API
+  version: 0.1.0
+paths:
+  /figures:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.figuresResponse'
+      summary: Get list of all figures.
+swagger: "2.0"

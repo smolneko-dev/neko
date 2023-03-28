@@ -34,6 +34,10 @@ type figuresResponse struct {
 	NextCursor string         `json:"next_cursor,omitempty"`
 }
 
+// figures -
+// @Summary Get list of all figures.
+// @Success 200 {object} figuresResponse
+// @Router /figures [get]
 func (r *figuresRoutes) figures(c *fiber.Ctx) error {
 	var count int
 
@@ -47,7 +51,7 @@ func (r *figuresRoutes) figures(c *fiber.Ctx) error {
 		return errorResponse(c, fiber.StatusBadRequest, "Query parameter 'count' is not an integer.")
 	}
 	if count <= 0 {
-		r.l.Error().Msgf("count is negative or zero %d http - v1 - figures - count", count)
+		r.l.Error().Msgf("count is negative or zero %d; http - v1 - figures - count", count)
 		return errorResponse(c, fiber.StatusBadRequest, "Query parameter 'count' is negative or zero.")
 	}
 
