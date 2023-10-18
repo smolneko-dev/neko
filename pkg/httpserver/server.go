@@ -31,6 +31,7 @@ func FiberConfig(status, appName string) fiber.Config {
 		ReadTimeout:               defaultReadTimeout,
 		WriteTimeout:              defaultWriteTimeout,
 		IdleTimeout:               60 * time.Second,
+		RequestMethods:            []string{fiber.MethodGet, fiber.MethodHead, fiber.MethodOptions},
 	}
 
 	if status == "dev" {
