@@ -39,7 +39,6 @@ func NewRouter(app *fiber.App, cfg RouterConfig, f usecase.Figure, c usecase.Cha
 			fiber.MethodGet,
 			fiber.MethodHead,
 			fiber.MethodOptions,
-			fiber.MethodHead,
 		}, ","),
 		AllowHeaders:     "User-Agent,Origin,Content-Type,Accept,Referrer",
 		AllowCredentials: false,
