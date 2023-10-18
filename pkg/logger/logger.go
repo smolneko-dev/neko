@@ -61,6 +61,8 @@ func New(level string, stage string) *Logger {
 			Logger()
 	}
 
+	zerolog.DefaultContextLogger = &logger
+
 	return &Logger{&logger}
 }
 

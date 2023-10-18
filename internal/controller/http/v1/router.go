@@ -8,13 +8,14 @@ import (
 	"github.com/smolneko-team/neko/internal/usecase"
 	"github.com/smolneko-team/neko/pkg/logger"
 
+	"github.com/gofiber/contrib/fiberzerolog"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	fLogger "github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/swagger"
 	"github.com/jaevor/go-nanoid"
+	"github.com/rs/zerolog"
 )
 
 type RouterConfig struct {
@@ -51,10 +52,11 @@ func NewRouter(app *fiber.App, cfg RouterConfig, f usecase.Figure, c usecase.Cha
 			Next:             nil,
 			EnableStackTrace: true,
 		}),
-		cors.New(corsCfg),
 		requestid.New(
 			requestid.Config{
-				Next:   nil,
+				Next: nil,
+				// Get request id from header (X-Request-ID) if exists.
+				// Header may be spoofed, must be behind a reverse proxy.
 				Header: fiber.HeaderXRequestID,
 				Generator: func() string {
 					id, err := nanoid.Standard(21)
@@ -65,7 +67,18 @@ func NewRouter(app *fiber.App, cfg RouterConfig, f usecase.Figure, c usecase.Cha
 				},
 				ContextKey: "req_id",
 			}),
-		fLogger.New(fLogger.ConfigDefault),
+		fiberzerolog.New(fiberzerolog.Config{
+			Logger:   cfg.Logger.Logger,
+			Fields:   []string{"status", "method", "url", "latency", "ip", "requestId", "error"},
+			Messages: []string{"", "", ""},
+		}),
+		// TODO: refactor this
+		func(c *fiber.Ctx) error {
+			log := zerolog.Ctx(c.UserContext()).With().Interface("requestId", c.Locals("req_id")).Logger()
+			cfg.Logger.Logger = &log
+			return c.Next()
+		},
+		cors.New(corsCfg),
 	)
 
 	app.Get("/health", func(c *fiber.Ctx) error {
