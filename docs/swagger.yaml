@@ -72,11 +72,11 @@ definitions:
 info:
   contact:
     name: Create an issue on GitHub.
-    url: https://github.com/smolneko-team/neko/issues/new
+    url: https://github.com/smolneko-dev/neko/issues/new
   description: https://smolneko.moe
   license:
     name: MIT License
-    url: https://github.com/smolneko-team/neko/blob/main/LICENSE
+    url: https://github.com/smolneko-dev/neko/blob/main/LICENSE
   title: smolneko API
   version: 0.1.0
 paths:

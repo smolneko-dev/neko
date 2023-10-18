@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/smolneko-team/neko/config"
-	v1 "github.com/smolneko-team/neko/internal/controller/http/v1"
-	"github.com/smolneko-team/neko/internal/infrastructure/repo"
-	"github.com/smolneko-team/neko/internal/usecase"
-	"github.com/smolneko-team/neko/pkg/httpserver"
-	"github.com/smolneko-team/neko/pkg/logger"
-	"github.com/smolneko-team/neko/pkg/postgres"
+	"github.com/smolneko-dev/neko/config"
+	v1 "github.com/smolneko-dev/neko/internal/controller/http/v1"
+	"github.com/smolneko-dev/neko/internal/infrastructure/repo"
+	"github.com/smolneko-dev/neko/internal/usecase"
+	"github.com/smolneko-dev/neko/pkg/httpserver"
+	"github.com/smolneko-dev/neko/pkg/logger"
+	"github.com/smolneko-dev/neko/pkg/postgres"
 
 	"github.com/gofiber/fiber/v2"
 )

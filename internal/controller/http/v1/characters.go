@@ -4,9 +4,9 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/smolneko-team/neko/internal/model"
-	"github.com/smolneko-team/neko/internal/usecase"
-	"github.com/smolneko-team/neko/pkg/logger"
+	"github.com/smolneko-dev/neko/internal/model"
+	"github.com/smolneko-dev/neko/internal/usecase"
+	"github.com/smolneko-dev/neko/pkg/logger"
 
 	"github.com/gofiber/fiber/v2"
 )

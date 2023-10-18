@@ -1,4 +1,4 @@
-module github.com/smolneko-team/neko
+module github.com/smolneko-dev/neko
 
 go 1.21
 

@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/smolneko-dev/neko/internal/model"
+	"github.com/smolneko-dev/neko/pkg/postgres"
+
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5/pgtype"
-	"github.com/smolneko-team/neko/internal/model"
-	"github.com/smolneko-team/neko/pkg/postgres"
 )
 
 type CharactersRepo struct {

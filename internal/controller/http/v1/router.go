@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	_ "github.com/smolneko-team/neko/docs"
-	"github.com/smolneko-team/neko/internal/usecase"
-	"github.com/smolneko-team/neko/pkg/logger"
+	_ "github.com/smolneko-dev/neko/docs"
+	"github.com/smolneko-dev/neko/internal/usecase"
+	"github.com/smolneko-dev/neko/pkg/logger"
 
 	"github.com/gofiber/contrib/fiberzerolog"
 	"github.com/gofiber/fiber/v2"
@@ -28,9 +28,9 @@ type RouterConfig struct {
 // @version 0.1.0
 // @description https://smolneko.moe
 // @contact.name Create an issue on GitHub.
-// @contact.url https://github.com/smolneko-team/neko/issues/new
+// @contact.url https://github.com/smolneko-dev/neko/issues/new
 // @license.name MIT License
-// @license.url https://github.com/smolneko-team/neko/blob/main/LICENSE
+// @license.url https://github.com/smolneko-dev/neko/blob/main/LICENSE
 // @BasePath /v1
 func NewRouter(app *fiber.App, cfg RouterConfig, f usecase.Figure, c usecase.Character, img usecase.Images) {
 	corsCfg := cors.Config{

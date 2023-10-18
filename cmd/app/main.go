@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/smolneko-team/neko/config"
-	"github.com/smolneko-team/neko/internal/app"
+	"github.com/smolneko-dev/neko/config"
+	"github.com/smolneko-dev/neko/internal/app"
 )
 
 func main() {
