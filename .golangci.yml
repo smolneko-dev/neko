@@ -1,16 +1,23 @@
 linters-settings:
-  dupl:
-    threshold: 300
   funlen:
     lines: 200
     statements: 50
+    ignore-comments: true
+  govet:
+    enable-all: true
+  nolintlint:
+    require-explanation: true
+    require-specific: true
+  wsl:
+    force-err-cuddling: true
   goconst:
     min-len: 2
-    min-occurrences: 3
+    min-occurrences: 2
 
 linters:
   disable-all: true
   enable:
+    - asciicheck
     - bodyclose
     - dogsled
     - dupl
@@ -22,6 +29,7 @@ linters:
     - goconst
     - gocritic
     - gocyclo
+    - godot
     - gofmt
     - goimports
     - gomnd
@@ -44,24 +52,10 @@ linters:
     - unused
     - whitespace
 
-  # don't enable:
-  # - asciicheck
-  # - depguard
-  # - scopelint
-  # - gochecknoglobals
-  # - gocognit
-  # - godot
-  # - godox
-  # - goerr113
-  # - interfacer
-  # - maligned
-  # - nestif
-  # - prealloc
-  # - testpackage
-  # - wsl
-
 run:
   timeout: 5m
-  skip-dirs:
-    - migrations
+
+issues:
+  exclude-dirs:
     - docs
+    - migrations
