@@ -13,10 +13,10 @@ import (
 )
 
 type CharactersRepo struct {
-	*postgres.Postgres
+	*postgres.DB
 }
 
-func NewCharactersRepo(pg *postgres.Postgres) *CharactersRepo {
+func NewCharactersRepo(pg *postgres.DB) *CharactersRepo {
 	return &CharactersRepo{pg}
 }
 

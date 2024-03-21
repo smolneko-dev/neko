@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -18,25 +19,20 @@ import (
 func Run(cfg *config.Config) {
 	log := logger.New(cfg.Log.Level, cfg.App.StageStatus)
 
-	url := fmt.Sprintf(
-		"host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
-		cfg.DB.Host,
-		cfg.DB.Port,
+	url := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=%s",
 		cfg.DB.User,
 		cfg.DB.Password,
+		cfg.DB.Host,
+		cfg.DB.Port,
 		cfg.DB.Name,
 		cfg.DB.SSLMode,
 	)
 
-	pg, err := postgres.New(url,
-		postgres.MaxPoolSize(cfg.DB.PoolMax),
-		postgres.ConnAttempts(10),
-		postgres.ConnTimeout(5*time.Second),
-	)
+	pg, err := postgres.New(context.Background(), url, 3, 5*time.Second)
 	if err != nil {
 		log.Fatal().Err(fmt.Errorf("app - Run - postgres.New: %w", err))
 	}
-	defer pg.Close()
+	defer pg.Pool.Close()
 
 	figuresUseCase := usecase.NewFigures(repo.NewFiguresRepo(pg, cfg.Storage))
 	charactersUseCase := usecase.NewCharacters(repo.NewCharactersRepo(pg))

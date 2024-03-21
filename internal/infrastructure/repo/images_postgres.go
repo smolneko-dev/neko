@@ -17,11 +17,11 @@ import (
 )
 
 type ImagesRepo struct {
-	*postgres.Postgres
+	*postgres.DB
 	config.Storage
 }
 
-func NewImagesRepo(pg *postgres.Postgres, s config.Storage) *ImagesRepo {
+func NewImagesRepo(pg *postgres.DB, s config.Storage) *ImagesRepo {
 	return &ImagesRepo{pg, s}
 }
 
