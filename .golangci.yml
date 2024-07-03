@@ -1,0 +1,62 @@
+run:
+  timeout: 2m
+
+linters:
+  disable-all: true
+  enable:
+    - asasalint
+    - asciicheck
+    - bodyclose
+    - decorder
+    - dogsled
+    - dupl
+    - errcheck
+    - exportloopref
+    - fatcontext
+    - gocheckcompilerdirectives
+    - gochecknoinits
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - godox
+    - gofmt
+    - goimports
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - ireturn
+    - lll
+    - loggercheck
+    - mirror
+    - misspell
+    - mnd
+    - nakedret
+    - noctx
+    - nolintlint
+    - paralleltest
+    - perfsprint
+    - revive
+    - staticcheck
+    - stylecheck
+    - tagalign
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - whitespace
+    - wsl
+
+linters-settings:
+  govet:
+    enable-all: true
+  nolintlint:
+    require-explanation: true
+    require-specific: true
+  wsl:
+    force-err-cuddling: true
+  goconst:
+    min-len: 2
+    min-occurrences: 2
