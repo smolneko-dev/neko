@@ -1,0 +1,14 @@
+version: "3"
+
+tasks:
+  build:
+    desc: Build the app.
+    cmd: go build -C ./cmd/neko/ -o neko
+
+  lint:
+    desc: Run linter.
+    cmd: golangci-lint run -v ./...
+
+  test:
+    desc: Run all tests.
+    cmd: go test -v -race ./...
