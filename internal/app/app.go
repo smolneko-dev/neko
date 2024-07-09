@@ -1,15 +1,36 @@
 package app
 
 import (
+	"context"
+	"errors"
+	"fmt"
+	"log"
+	"syscall"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/smolneko-dev/neko/internal/config"
 	"go.uber.org/zap"
 )
 
-const addr = ":38575"
+type App struct {
+	log *zap.Logger
+	cfg config.Config
+}
 
-func Run() {
-	log := zap.Must(zap.NewProduction())
-	defer log.Sync()
+func New(_ context.Context, cfg config.Config) (App, error) {
+	return App{
+		log: zap.Must(zap.NewProduction()),
+		cfg: cfg,
+	}, nil
+}
+
+func (a App) Run(_ context.Context) error {
+	defer func() {
+		err := a.log.Sync()
+		if err != nil && !errors.Is(err, syscall.ENOTTY) {
+			log.Println(err)
+		}
+	}()
 
 	r := fiber.New()
 
@@ -17,10 +38,12 @@ func Run() {
 		return c.SendString("Hello, World!")
 	})
 
-	log.Info("neko started", zap.String("addr", addr))
+	a.log.Info("neko started", zap.String("addr", a.cfg.RunAddress))
 
-	err := r.Listen(addr)
+	err := r.Listen(a.cfg.RunAddress)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("http router: %w", err)
 	}
+
+	return nil
 }
