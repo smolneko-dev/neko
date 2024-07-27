@@ -38,9 +38,9 @@ func (a App) Run(_ context.Context) error {
 		return c.SendString("Hello, World!")
 	})
 
-	a.log.Info("neko started", zap.String("addr", a.cfg.RunAddress))
+	a.log.Info("neko started", zap.String("addr", a.cfg.Server.Address))
 
-	err := r.Listen(a.cfg.RunAddress)
+	err := r.Listen(a.cfg.Server.Address)
 	if err != nil {
 		return fmt.Errorf("http router: %w", err)
 	}
